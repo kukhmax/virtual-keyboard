@@ -1,3 +1,3 @@
 # virtual-keyboard
 
-## deploy: 
+## deploy: https://kukhmax.github.io/virtual-keyboard/ 
