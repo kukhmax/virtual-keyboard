@@ -1,0 +1,52 @@
+.container {
+    margin: 0 auto;
+    font-family: "Trebuchet MS", "Helvetica", sans-serif;
+}
+
+textarea {
+    overflow: auto;
+}
+
+.textarea {
+    display: block;
+    width: 700px;
+    height: 200px;
+    margin: 10px auto 10px;
+    padding: 10px;
+    font-size: 18px;
+    color: #444444;
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(5, 40px);
+    row-gap: 6px;
+    width: 704px;
+    margin: 0 auto;
+    padding: 5px;
+    padding-left: 0;
+    padding-bottom: 0;
+    background: #888888;
+    border: 3px solid #222222;
+    border-radius: 5px
+}
+
+.key {
+    width: 40px;
+    height: 40px;
+    margin-left: 6px;
+    font-weight: 500;
+    line-height: 40px;
+    text-align: center;
+    color: #ffffff;
+    background: #444444;
+    border-radius: 3px;
+    cursor: pointer;
+    user-select: none;
+    transition: border-radius 0.3s, background-color 0.3s;
+}
+
+.hidden {
+    display: none;
+}
