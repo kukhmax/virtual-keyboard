@@ -2,24 +2,24 @@
 
 import keys from './key-names';
 
-function innerSpan(lang) {
+function innerSpan(spanKey, language) {
     const charsList = ['upperEng', 'lowerEng', 'upperRus', 'lowerRus'],
           classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
 
     for (let i = 0; i < classes.length; i++) {
         const span = document.createElement('span');
 
-        if (lang === langRus) {
+        if (language === 'rus') {
 
             span.classList.add(classes[i]);
             span.classList.add('hidden');
             span.textContent = keys[0][charsList[i % 2 === 0 ? 2 : 3]];
-            lang.append(span);
-        } else if (lang === langEng) {
+            spanKey.append(span);
+        } else if (language === 'eng') {
             span.classList.add(classes[i]);
             span.classList.add('hidden');
             span.textContent = keys[0][charsList[i % 2 === 0 ? 0 : 1]];
-            lang.append(span);
+            spanKey.append(span);
         }
 
     }
@@ -38,8 +38,8 @@ function createKey(chars) {
     langEng.classList.add('eng');
     langEng.classList.add('hidden');
 
-    innerSpan(langRus);
-    innerSpan(langEng);
+    innerSpan(langRus, 'rus');
+    innerSpan(langEng, 'eng');
 
     return key;
 
