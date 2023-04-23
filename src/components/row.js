@@ -1,11 +1,12 @@
 'use strict';
 
 import createKey from "./key";
+import keys from "./key-names";
 
-function createRow(cols) {
+function createRow(cols, start) {
     const row = document.createElement('div');
     row.classList.add('row');
-    for (let i = 0; i < cols; i++) {
+    for (let i = start; i < cols + start; i++) {
         const key = createKey(i);
         row.append(key);
     }
