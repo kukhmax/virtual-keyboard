@@ -1,17 +1,16 @@
 'use strict';
 
-import createKey from './key';
+import createRow from './row';
 
 function createKeyboard() {
     const keyboard = document.createElement('div'),
-          key = createKey('o');
+          row  = createRow(14);
     keyboard.classList.add('keyboard');
 
-    keyboard.append(key);
+    keyboard.append(row);
 
 
     return keyboard;
 }
 
 export default createKeyboard;
-document.createElement('span')

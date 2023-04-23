@@ -2,8 +2,8 @@
 
 import keys from './key-names';
 
-function innerSpan(spanKey, language) {
-    const charsList = ['upperEng', 'lowerEng', 'upperRus', 'lowerRus'],
+function innerSpan(spanKey, language, index) {
+    const charsList = ['lowerEng', 'upperEng', 'lowerRus', 'upperRus'],
           classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
 
     for (let i = 0; i < classes.length; i++) {
@@ -13,19 +13,19 @@ function innerSpan(spanKey, language) {
 
             span.classList.add(classes[i]);
             span.classList.add('hidden');
-            span.textContent = keys[0][charsList[i % 2 === 0 ? 2 : 3]];
+            span.textContent = keys[index][charsList[i % 2 === 0 ? 2 : 3]];
             spanKey.append(span);
         } else if (language === 'eng') {
             span.classList.add(classes[i]);
             span.classList.add('hidden');
-            span.textContent = keys[0][charsList[i % 2 === 0 ? 0 : 1]];
+            span.textContent = keys[index][charsList[i % 2 === 0 ? 0 : 1]];
             spanKey.append(span);
         }
 
     }
 }
 
-function createKey(chars) {
+function createKey(index) {
     const key = document.createElement('div'),
           langRus = document.createElement('span'),
           langEng = document.createElement('span');
@@ -38,8 +38,8 @@ function createKey(chars) {
     langEng.classList.add('eng');
     langEng.classList.add('hidden');
 
-    innerSpan(langRus, 'rus');
-    innerSpan(langEng, 'eng');
+    innerSpan(langRus, 'rus', index);
+    innerSpan(langEng, 'eng', index);
 
     return key;
 

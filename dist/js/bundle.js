@@ -25,8 +25,58 @@ const keys = [
     {upperEng: '(', lowerEng: '9', upperRus: '(', lowerRus: '9'},
     {upperEng: ')', lowerEng: '0', upperRus: ')', lowerRus: '0'},
     {upperEng: '_', lowerEng: '-', upperRus: '_', lowerRus: '-'},
-    {upperEng: '+', lowerEng: '=', upperRus: '+', lowerRus: '='},
+    {upperEng: '+', lowerEng: '=', upperRus: '+', lowehiddenrRus: '='},
     {upperEng: 'Backspace', lowerEng: 'Backspace', upperRus: 'Backspace', lowerRus: 'Backspace'},
+    {upperEng: 'Tab', lowerEng: 'Tab', upperRus: 'Tab', lowerRus: 'Tab'},
+    {upperEng: 'Q', lowerEng: 'q', upperRus: 'Й', lowerRus: 'й'},
+    {upperEng: 'W', lowerEng: 'w', upperRus: 'Ц', lowerRus: 'ц'},
+    {upperEng: 'E', lowerEng: 'e', upperRus: 'У', lowerRus: 'у'},
+    {upperEng: 'R', lowerEng: 'r', upperRus: 'К', lowerRus: 'к'},
+    {upperEng: 'T', lowerEng: 't', upperRus: 'Е', lowerRus: 'е'},
+    {upperEng: 'Y', lowerEng: 'y', upperRus: 'Н', lowerRus: 'н'},
+    {upperEng: 'U', lowerEng: 'u', upperRus: 'Г', lowerRus: 'г'},
+    {upperEng: 'I', lowerEng: 'i', upperRus: 'Ш', lowerRus: 'ш'},
+    {upperEng: 'O', lowerEng: 'o', upperRus: 'Щ', lowerRus: 'щ'},
+    {upperEng: 'P', lowerEng: 'p', upperRus: 'З', lowerRus: 'з'},
+    {upperEng: '{', lowerEng: '[', upperRus: 'Х', lowerRus: 'х'},
+    {upperEng: '}', lowerEng: ']', upperRus: 'Ъ', lowerRus: 'ъ'},
+    {upperEng: '|', lowerEng: '\\', upperRus: '/', lowerRus: '\\'},
+    {upperEng: 'Del', lowerEng: 'Del', upperRus: 'Del', lowerRus: 'Del'},
+    {upperEng: 'CapsLock', lowerEng: 'CapsLock', upperRus: 'CapsLock', lowerRus: 'CapsLock'},
+    {upperEng: 'A', lowerEng: 'a', upperRus: 'Ф', lowerRus: 'ф'},
+    {upperEng: 'S', lowerEng: 's', upperRus: 'Ы', lowerRus: 'ы'},
+    {upperEng: 'D', lowerEng: 'd', upperRus: 'В', lowerRus: 'в'},
+    {upperEng: 'F', lowerEng: 'f', upperRus: 'А', lowerRus: 'а'},
+    {upperEng: 'G', lowerEng: 'g', upperRus: 'П', lowerRus: 'п'},
+    {upperEng: 'H', lowerEng: 'h', upperRus: 'Р', lowerRus: 'р'},
+    {upperEng: 'J', lowerEng: 'j', upperRus: 'О', lowerRus: 'о'},
+    {upperEng: 'K', lowerEng: 'k', upperRus: 'Л', lowerRus: 'л'},
+    {upperEng: 'L', lowerEng: 'l', upperRus: 'Д', lowerRus: 'д'},
+    {upperEng: ':', lowerEng: ';', upperRus: 'Ж', lowerRus: 'ж'},
+    {upperEng: '"', lowerEng: "'", upperRus: 'Э', lowerRus: 'э'},
+    {upperEng: 'Enter', lowerEng: 'Enter', upperRus: 'Enter', lowerRus: 'Enter'},
+    {upperEng: 'ShiftR', lowerEng: 'Shift', upperRus: 'Shift', lowerRus: 'Shift'},
+    {upperEng: 'Z', lowerEng: 'z', upperRus: 'Я', lowerRus: 'я'},
+    {upperEng: 'X', lowerEng: 'x', upperRus: 'Ч', lowerRus: 'ч'},
+    {upperEng: 'C', lowerEng: 'c', upperRus: 'С', lowerRus: 'с'},
+    {upperEng: 'V', lowerEng: 'v', upperRus: 'М', lowerRus: 'м'},
+    {upperEng: 'B', lowerEng: 'b', upperRus: 'И', lowerRus: 'и'},
+    {upperEng: 'N', lowerEng: 'n', upperRus: 'Т', lowerRus: 'т'},
+    {upperEng: 'M', lowerEng: 'm', upperRus: 'Ь', lowerRus: 'ь'},
+    {upperEng: '<', lowerEng: ',', upperRus: 'Б', lowerRus: 'б'},
+    {upperEng: '>', lowerEng: '.', upperRus: 'Ю', lowerRus: 'ю'},
+    {upperEng: '?', lowerEng: '/', upperRus: ',', lowerRus: '.'},
+    {upperEng: '▲', lowerEng: '▲', upperRus: '▲', lowerRus: '▲'},
+    {upperEng: 'ShiftL', lowerEng: 'Shift', upperRus: 'Shift', lowerRus: 'Shift'},
+    {upperEng: 'CtrlR', lowerEng: 'Ctrl', upperRus: 'Ctrl', lowerRus: 'Ctrl'},
+    {upperEng: 'Win', lowerEng: 'Win', upperRus: 'Win', lowerRus: 'Win'},
+    {upperEng: 'AltR', lowerEng: 'Alt', upperRus: 'Alt', lowerRus: 'Alt'},
+    {upperEng: ' ', lowerEng: ' ', upperRus: ' ', lowerRus: ' '},
+    {upperEng: 'AltL', lowerEng: 'Alt', upperRus: 'Alt', lowerRus: 'Alt'},
+    {upperEng: '◄', lowerEng: '◄', upperRus: '◄', lowerRus: '◄'},
+    {upperEng: '▼', lowerEng: '▼', upperRus: '▼', lowerRus: '▼'},
+    {upperEng: '►', lowerEng: '►', upperRus: '►', lowerRus: '►'},
+    {upperEng: 'CtrlL', lowerEng: 'Ctrl', upperRus: 'Ctrl', lowerRus: 'Ctrl'},
 ];
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (keys);
@@ -48,8 +98,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function innerSpan(spanKey, language) {
-    const charsList = ['upperEng', 'lowerEng', 'upperRus', 'lowerRus'],
+function innerSpan(spanKey, language, index) {
+    const charsList = ['lowerEng', 'upperEng', 'lowerRus', 'upperRus'],
           classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
 
     for (let i = 0; i < classes.length; i++) {
@@ -59,19 +109,19 @@ function innerSpan(spanKey, language) {
 
             span.classList.add(classes[i]);
             span.classList.add('hidden');
-            span.textContent = _key_names__WEBPACK_IMPORTED_MODULE_0__["default"][0][charsList[i % 2 === 0 ? 2 : 3]];
+            span.textContent = _key_names__WEBPACK_IMPORTED_MODULE_0__["default"][index][charsList[i % 2 === 0 ? 2 : 3]];
             spanKey.append(span);
         } else if (language === 'eng') {
             span.classList.add(classes[i]);
             span.classList.add('hidden');
-            span.textContent = _key_names__WEBPACK_IMPORTED_MODULE_0__["default"][0][charsList[i % 2 === 0 ? 0 : 1]];
+            span.textContent = _key_names__WEBPACK_IMPORTED_MODULE_0__["default"][index][charsList[i % 2 === 0 ? 0 : 1]];
             spanKey.append(span);
         }
 
     }
 }
 
-function createKey(chars) {
+function createKey(index) {
     const key = document.createElement('div'),
           langRus = document.createElement('span'),
           langEng = document.createElement('span');
@@ -84,8 +134,8 @@ function createKey(chars) {
     langEng.classList.add('eng');
     langEng.classList.add('hidden');
 
-    innerSpan(langRus, 'rus');
-    innerSpan(langEng, 'eng');
+    innerSpan(langRus, 'rus', index);
+    innerSpan(langEng, 'eng', index);
 
     return key;
 
@@ -105,24 +155,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _key__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./key */ "./src/components/key.js");
+/* harmony import */ var _row__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./row */ "./src/components/row.js");
 
 
 
 
 function createKeyboard() {
     const keyboard = document.createElement('div'),
-          key = (0,_key__WEBPACK_IMPORTED_MODULE_0__["default"])('o');
+          row  = (0,_row__WEBPACK_IMPORTED_MODULE_0__["default"])(14);
     keyboard.classList.add('keyboard');
 
-    keyboard.append(key);
+    keyboard.append(row);
 
 
     return keyboard;
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createKeyboard);
-document.createElement('span')
+
+/***/ }),
+
+/***/ "./src/components/row.js":
+/*!*******************************!*\
+  !*** ./src/components/row.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _key__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./key */ "./src/components/key.js");
+
+
+
+
+function createRow(cols) {
+    const row = document.createElement('div');
+    row.classList.add('row');
+    for (let i = 0; i < cols; i++) {
+        const key = (0,_key__WEBPACK_IMPORTED_MODULE_0__["default"])(i);
+        row.append(key);
+    }
+    return row;
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createRow);
 
 /***/ }),
 
