@@ -6,8 +6,8 @@ function innerSpan(spanKey, language, index) {
     const charsList = ['lowerEng', 'upperEng', 'lowerRus', 'upperRus'],
           classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
 
-          if (keys[index].meta) {
-            spanKey.parentNode.classList.add(keys[index].meta);
+          if (keys[index].code) {
+            spanKey.parentNode.classList.add(keys[index].code);
           }
 
     for (let i = 0; i < classes.length; i++) {
@@ -42,7 +42,7 @@ function createKey(index) {
     langRus.classList.add('hidden');
     key.append(langEng);
     langEng.classList.add('eng');
-    // langEng.classList.add('hidden');
+    // langEng.classList.add('show');
 
     innerSpan(langRus, 'rus', index);
     innerSpan(langEng, 'eng', index);

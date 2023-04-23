@@ -21,8 +21,6 @@ function createKeyboard() {
         keyboard.append(row);
     });
 
-
-
     return keyboard;
 }
 
