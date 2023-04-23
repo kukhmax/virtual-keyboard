@@ -1,7 +1,6 @@
 'use strict';
 
 import createKey from "./key";
-import keys from "./key-names";
 
 function createRow(cols, start) {
     const row = document.createElement('div');
