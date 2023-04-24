@@ -9,13 +9,11 @@ window.addEventListener('DOMContentLoaded', () => {
     container.classList.add('container');
     document.body.append(container);
     container.append(textarea);
-
     container.append(keyboard);
 
     const keys = container.querySelectorAll('.key'),
           caseDownKeys = keyboard.querySelectorAll('.caseDown'),
           caseUpKeys = keyboard.querySelectorAll('.caseUp');
-
 
     keys.forEach(key => {
         if (key.classList.contains('CapsLock')) {
@@ -38,7 +36,41 @@ window.addEventListener('DOMContentLoaded', () => {
                     });
                 }
 
+            });
+        } else if (key.classList.contains('ShiftLeft') || key.classList.contains('ShiftRight')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+                caseDownKeys.forEach(key => {
+                    key.classList.add('hidden');
                 });
+                caseUpKeys.forEach(key => {
+                    key.classList.remove('hidden');
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+                caseDownKeys.forEach(key => {
+                    key.classList.remove('hidden');
+                });
+                caseUpKeys.forEach(key => {
+                    key.classList.add('hidden');
+                });
+            });
+        } else if (key.classList.contains('ControlLeft') ||
+                   key.classList.contains('ControlRight') ||
+                   key.classList.contains('AltLeft') ||
+                   key.classList.contains('AltRight') ||
+                   key.classList.contains('MetaLeft')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
         } else {
             key.addEventListener('mousedown', (e) => {
                 let target = e.currentTarget;
