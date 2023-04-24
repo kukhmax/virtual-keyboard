@@ -71,6 +71,21 @@ window.addEventListener('DOMContentLoaded', () => {
                 let target = e.currentTarget;
                 target.classList.remove('active');
             });
+        } else if (key.classList.contains('Backspace')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const cursorPosition = textarea.selectionStart;
+                const textBeforeCursor = textarea.value.slice(0, cursorPosition);
+                const lastElementPosition = textBeforeCursor.lastIndexOf(' ');
+                const newText = textBeforeCursor.slice(0, lastElementPosition) + textarea.value.slice(cursorPosition);
+                textarea.value = newText;
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
         } else {
             key.addEventListener('mousedown', (e) => {
                 let target = e.currentTarget;
