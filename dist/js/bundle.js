@@ -400,6 +400,30 @@ window.addEventListener('DOMContentLoaded', () => {
                 let target = e.currentTarget;
                 target.classList.remove('active');
             });
+        } else if (key.classList.contains('Delete')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const cursorPosition = textarea.selectionStart;
+                const textAfterCursor = textarea.value.slice(cursorPosition);
+                const nextElementPosition = textAfterCursor.indexOf(' ');
+
+                // Если следующий элемент не найден, удаляем текст после курсора
+                if (nextElementPosition === -1) {
+                    textarea.value = textarea.value.slice(0, cursorPosition);
+                } else {
+                    const newText = textarea.value.slice(0, cursorPosition) + textAfterCursor.slice(nextElementPosition + 1);
+                    textarea.value = newText;
+                }
+
+                // Устанавливаем курсор в правильное место
+                textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
         } else {
             key.addEventListener('mousedown', (e) => {
                 let target = e.currentTarget;
