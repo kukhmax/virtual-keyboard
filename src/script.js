@@ -40,20 +40,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 });
         } else {
-            key.addEventListener('click', (e) => {
+            key.addEventListener('mousedown', (e) => {
                 let target = e.currentTarget;
-                // console.log(target.textContent)
                 target.classList.add('active');
-                setTimeout(function() {
-                    target.classList.remove('active');
-                  }, 300);
 
-                  const spans = key.querySelectorAll('span > span');
-                  spans.forEach(span => {
-                      if (!span.classList.contains('hidden')) {
-                          textarea.value += span.textContent;
-                      }
-                  });
+                const spans = key.querySelectorAll('span > span');
+                spans.forEach(span => {
+                    if (!span.classList.contains('hidden')) {
+                        textarea.value += span.textContent;
+                    }
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
             });
         }
 
