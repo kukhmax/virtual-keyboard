@@ -4,7 +4,7 @@ import keys from './key-names';
 
 function innerSpan(spanKey, language, index) {
     const charsList = ['lowerEng', 'upperEng', 'lowerRus', 'upperRus'],
-          classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
+          classes = ['caseDown', 'caseUp', 'shiftCaps', 'caps'];
 
           if (keys[index].code) {
             spanKey.parentNode.classList.add(keys[index].code);
@@ -42,7 +42,7 @@ function createKey(index) {
     langRus.classList.add('hidden');
     key.append(langEng);
     langEng.classList.add('eng');
-    // langEng.classList.add('show');
+    langEng.classList.add('show');
 
     innerSpan(langRus, 'rus', index);
     innerSpan(langEng, 'eng', index);

@@ -100,7 +100,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function innerSpan(spanKey, language, index) {
     const charsList = ['lowerEng', 'upperEng', 'lowerRus', 'upperRus'],
-          classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
+          classes = ['caseDown', 'caseUp', 'shiftCaps', 'caps'];
 
           if (_key_names__WEBPACK_IMPORTED_MODULE_0__["default"][index].code) {
             spanKey.parentNode.classList.add(_key_names__WEBPACK_IMPORTED_MODULE_0__["default"][index].code);
@@ -138,7 +138,7 @@ function createKey(index) {
     langRus.classList.add('hidden');
     key.append(langEng);
     langEng.classList.add('eng');
-    // langEng.classList.add('show');
+    langEng.classList.add('show');
 
     innerSpan(langRus, 'rus', index);
     innerSpan(langEng, 'eng', index);
@@ -326,11 +326,13 @@ window.addEventListener('DOMContentLoaded', () => {
     container.append(keyboard);
 
     const keys = container.querySelectorAll('.key'),
-          caseDownKeys = keyboard.querySelectorAll('.caseDown'),
-          caseUpKeys = keyboard.querySelectorAll('.caseUp');
+          caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
+          caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
+          capsKeys = keyboard.querySelectorAll('.key span.show .caps');
 
     keys.forEach(key => {
         if (key.classList.contains('CapsLock')) {
+
             key.addEventListener('click', (e) => {
                 let target = e.currentTarget;
                 target.classList.toggle('active');
@@ -338,20 +340,22 @@ window.addEventListener('DOMContentLoaded', () => {
                     caseDownKeys.forEach(key => {
                         key.classList.add('hidden');
                     });
-                    caseUpKeys.forEach(key => {
+                    capsKeys.forEach(key => {
                         key.classList.remove('hidden');
                     });
+
                 } else {
                     caseDownKeys.forEach(key => {
                         key.classList.remove('hidden');
                     });
-                    caseUpKeys.forEach(key => {
+                    capsKeys.forEach(key => {
                         key.classList.add('hidden');
                     });
                 }
 
             });
-        } else if (key.classList.contains('ShiftLeft') || key.classList.contains('ShiftRight')) {
+        } else if (key.classList.contains('ShiftLeft') ||
+                   key.classList.contains('ShiftRight')) {
             key.addEventListener('mousedown', (e) => {
                 let target = e.currentTarget;
                 target.classList.add('active');

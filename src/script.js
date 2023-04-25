@@ -12,11 +12,13 @@ window.addEventListener('DOMContentLoaded', () => {
     container.append(keyboard);
 
     const keys = container.querySelectorAll('.key'),
-          caseDownKeys = keyboard.querySelectorAll('.caseDown'),
-          caseUpKeys = keyboard.querySelectorAll('.caseUp');
+          caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
+          caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
+          capsKeys = keyboard.querySelectorAll('.key span.show .caps');
 
     keys.forEach(key => {
         if (key.classList.contains('CapsLock')) {
+
             key.addEventListener('click', (e) => {
                 let target = e.currentTarget;
                 target.classList.toggle('active');
@@ -24,20 +26,22 @@ window.addEventListener('DOMContentLoaded', () => {
                     caseDownKeys.forEach(key => {
                         key.classList.add('hidden');
                     });
-                    caseUpKeys.forEach(key => {
+                    capsKeys.forEach(key => {
                         key.classList.remove('hidden');
                     });
+
                 } else {
                     caseDownKeys.forEach(key => {
                         key.classList.remove('hidden');
                     });
-                    caseUpKeys.forEach(key => {
+                    capsKeys.forEach(key => {
                         key.classList.add('hidden');
                     });
                 }
 
             });
-        } else if (key.classList.contains('ShiftLeft') || key.classList.contains('ShiftRight')) {
+        } else if (key.classList.contains('ShiftLeft') ||
+                   key.classList.contains('ShiftRight')) {
             key.addEventListener('mousedown', (e) => {
                 let target = e.currentTarget;
                 target.classList.add('active');
