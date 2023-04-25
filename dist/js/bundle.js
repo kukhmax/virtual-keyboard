@@ -244,6 +244,148 @@ function createTextarea() {
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createTextarea);
 
+/***/ }),
+
+/***/ "./src/components/utils.js":
+/*!*********************************!*\
+  !*** ./src/components/utils.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "eventBackSpaceDown": () => (/* binding */ eventBackSpaceDown),
+/* harmony export */   "eventCapsLock": () => (/* binding */ eventCapsLock),
+/* harmony export */   "eventDeleteDown": () => (/* binding */ eventDeleteDown),
+/* harmony export */   "eventEnterDown": () => (/* binding */ eventEnterDown),
+/* harmony export */   "eventKeyDown": () => (/* binding */ eventKeyDown),
+/* harmony export */   "eventShiftKeyDown": () => (/* binding */ eventShiftKeyDown),
+/* harmony export */   "eventShiftKeyUp": () => (/* binding */ eventShiftKeyUp),
+/* harmony export */   "eventTabDown": () => (/* binding */ eventTabDown),
+/* harmony export */   "makeActiveKey": () => (/* binding */ makeActiveKey),
+/* harmony export */   "makeNotActiveKey": () => (/* binding */ makeNotActiveKey)
+/* harmony export */ });
+
+
+function makeActiveKey(e) {
+    let target = e.currentTarget;
+    target.classList.add('active');
+}
+
+function makeNotActiveKey(e) {
+    let target = e.currentTarget;
+    target.classList.remove('active');
+}
+
+function eventCapsLock(e, caseDownKeys, capsKeys) {
+    let target = e.currentTarget;
+    target.classList.toggle('active');
+    if (target.classList.contains('active')) {
+
+        caseDownKeys.forEach(key => {
+            if (/[а-яёa-z]/.test(key.textContent)) {
+                key.classList.add('hidden');
+            }
+
+        });
+        capsKeys.forEach(key => {
+            if (/[A-ZЁА-Я]/.test(key.textContent)) {
+                key.classList.remove('hidden');
+            }
+
+        });
+
+    } else {
+        caseDownKeys.forEach(key => {
+            key.classList.remove('hidden');
+        });
+        capsKeys.forEach(key => {
+            key.classList.add('hidden');
+        });
+    }
+}
+
+function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
+    makeActiveKey(e);
+    caseDownKeys.forEach(key => {
+        key.classList.add('hidden');
+    });
+    caseUpKeys.forEach(key => {
+        key.classList.remove('hidden');
+    });
+}
+
+function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
+    makeNotActiveKey(e);
+    caseDownKeys.forEach(key => {
+        key.classList.remove('hidden');
+    });
+    caseUpKeys.forEach(key => {
+        key.classList.add('hidden');
+    });
+}
+
+function eventBackSpaceDown(e, textarea) {
+    makeActiveKey(e);
+
+    const cursorPosition = textarea.selectionStart;
+    const textBeforeCursor = textarea.value.slice(0, cursorPosition);
+    const lastElementPosition = textBeforeCursor.lastIndexOf(' ');
+    const newText = textBeforeCursor.slice(0, lastElementPosition) + textarea.value.slice(cursorPosition);
+    textarea.value = newText;
+}
+
+function eventDeleteDown(e, textarea) {
+    makeActiveKey(e);
+
+    const cursorPosition = textarea.selectionStart;
+    const textAfterCursor = textarea.value.slice(cursorPosition);
+    const nextElementPosition = textAfterCursor.indexOf(' ');
+
+    // Если следующий элемент не найден, удаляем текст после курсора
+    if (nextElementPosition === -1) {
+        textarea.value = textarea.value.slice(0, cursorPosition);
+    } else {
+        const newText = textarea.value.slice(0, cursorPosition) + textAfterCursor.slice(nextElementPosition + 1);
+        textarea.value = newText;
+    }
+
+    // Устанавливаем курсор в правильное место
+    textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+}
+
+function eventEnterDown(e, spans) {
+    makeActiveKey(e);
+
+    spans.forEach(span => {
+        if (!span.classList.contains('hidden')) {
+            textarea.value += '\n';
+        }
+    });
+}
+
+function eventTabDown(e, spans) {
+    makeActiveKey(e);
+
+    spans.forEach(span => {
+        if (!span.classList.contains('hidden')) {
+            textarea.value += '  ';
+        }
+    });
+}
+
+function eventKeyDown(e, spans) {
+    makeActiveKey(e);
+
+    spans.forEach(span => {
+        if (!span.classList.contains('hidden')) {
+            textarea.value += span.textContent;
+        }
+    });
+}
+
+
+
 /***/ })
 
 /******/ 	});
@@ -311,13 +453,15 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_textarea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/textarea */ "./src/components/textarea.js");
 /* harmony import */ var _components_keyboard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/keyboard */ "./src/components/keyboard.js");
+/* harmony import */ var _components_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/utils */ "./src/components/utils.js");
+
 
 
 
 window.addEventListener('DOMContentLoaded', () => {
     const container = document.createElement('div'),
-          textarea = (0,_components_textarea__WEBPACK_IMPORTED_MODULE_0__["default"])(),
-          keyboard = (0,_components_keyboard__WEBPACK_IMPORTED_MODULE_1__["default"])();
+        textarea = (0,_components_textarea__WEBPACK_IMPORTED_MODULE_0__["default"])(),
+        keyboard = (0,_components_keyboard__WEBPACK_IMPORTED_MODULE_1__["default"])();
 
     container.classList.add('container');
     document.body.append(container);
@@ -328,160 +472,75 @@ window.addEventListener('DOMContentLoaded', () => {
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
 
     const keys = container.querySelectorAll('.key'),
-          caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
-          caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
-          capsKeys = keyboard.querySelectorAll('.key span.show .caps');
+        caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
+        caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
+        capsKeys = keyboard.querySelectorAll('.key span.show .caps');
 
     keys.forEach(key => {
+        const spans = key.querySelectorAll('span > span');
+
         if (key.classList.contains('CapsLock')) {
 
             key.addEventListener('click', (e) => {
-                let target = e.currentTarget;
-                target.classList.toggle('active');
-                if (target.classList.contains('active')) {
-                    caseDownKeys.forEach(key => {
-                        key.classList.add('hidden');
-                    });
-                    capsKeys.forEach(key => {
-                        key.classList.remove('hidden');
-                    });
-
-                } else {
-                    caseDownKeys.forEach(key => {
-                        key.classList.remove('hidden');
-                    });
-                    capsKeys.forEach(key => {
-                        key.classList.add('hidden');
-                    });
-                }
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys);
 
             });
         } else if (key.classList.contains('ShiftLeft') ||
-                   key.classList.contains('ShiftRight')) {
+            key.classList.contains('ShiftRight')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-                caseDownKeys.forEach(key => {
-                    key.classList.add('hidden');
-                });
-                caseUpKeys.forEach(key => {
-                    key.classList.remove('hidden');
-                });
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyDown)(e, caseDownKeys, caseUpKeys)
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
-                caseDownKeys.forEach(key => {
-                    key.classList.remove('hidden');
-                });
-                caseUpKeys.forEach(key => {
-                    key.classList.add('hidden');
-                });
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyUp)(e, caseDownKeys, caseUpKeys)
             });
         } else if (key.classList.contains('ControlLeft') ||
-                   key.classList.contains('ControlRight') ||
-                   key.classList.contains('AltLeft') ||
-                   key.classList.contains('AltRight') ||
-                   key.classList.contains('MetaLeft')) {
+            key.classList.contains('ControlRight') ||
+            key.classList.contains('AltLeft') ||
+            key.classList.contains('AltRight') ||
+            key.classList.contains('MetaLeft')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeActiveKey)(e);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
             });
         } else if (key.classList.contains('Backspace')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const cursorPosition = textarea.selectionStart;
-                const textBeforeCursor = textarea.value.slice(0, cursorPosition);
-                const lastElementPosition = textBeforeCursor.lastIndexOf(' ');
-                const newText = textBeforeCursor.slice(0, lastElementPosition) + textarea.value.slice(cursorPosition);
-                textarea.value = newText;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventBackSpaceDown)(e, textarea);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
             });
         } else if (key.classList.contains('Delete')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const cursorPosition = textarea.selectionStart;
-                const textAfterCursor = textarea.value.slice(cursorPosition);
-                const nextElementPosition = textAfterCursor.indexOf(' ');
-
-                // Если следующий элемент не найден, удаляем текст после курсора
-                if (nextElementPosition === -1) {
-                    textarea.value = textarea.value.slice(0, cursorPosition);
-                } else {
-                    const newText = textarea.value.slice(0, cursorPosition) + textAfterCursor.slice(nextElementPosition + 1);
-                    textarea.value = newText;
-                }
-
-                // Устанавливаем курсор в правильное место
-                textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventDeleteDown)(e, textarea);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
             });
         } else if (key.classList.contains('Enter')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const spans = key.querySelectorAll('span > span');
-                spans.forEach(span => {
-                    if (!span.classList.contains('hidden')) {
-                        textarea.value += '\n';
-                    }
-                });
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventEnterDown)(e, spans);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
             });
         } else if (key.classList.contains('Tab')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const spans = key.querySelectorAll('span > span');
-                spans.forEach(span => {
-                    if (!span.classList.contains('hidden')) {
-                        textarea.value += '  ';
-                    }
-                });
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventTabDown)(e, spans);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
             });
         } else {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const spans = key.querySelectorAll('span > span');
-                spans.forEach(span => {
-                    if (!span.classList.contains('hidden')) {
-                        textarea.value += span.textContent;
-                    }
-                });
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventKeyDown)(e, spans);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
             });
         }
-
     });
-
 });
 
 

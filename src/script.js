@@ -1,10 +1,22 @@
 import createTextarea from './components/textarea';
 import createKeyboard from './components/keyboard';
+import {
+    eventCapsLock,
+    eventShiftKeyDown,
+    eventShiftKeyUp,
+    makeActiveKey,
+    makeNotActiveKey,
+    eventBackSpaceDown,
+    eventDeleteDown,
+    eventEnterDown,
+    eventTabDown,
+    eventKeyDown
+} from './components/utils';
 
 window.addEventListener('DOMContentLoaded', () => {
     const container = document.createElement('div'),
-          textarea = createTextarea(),
-          keyboard = createKeyboard();
+        textarea = createTextarea(),
+        keyboard = createKeyboard();
 
     container.classList.add('container');
     document.body.append(container);
@@ -15,160 +27,75 @@ window.addEventListener('DOMContentLoaded', () => {
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
 
     const keys = container.querySelectorAll('.key'),
-          caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
-          caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
-          capsKeys = keyboard.querySelectorAll('.key span.show .caps');
+        caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
+        caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
+        capsKeys = keyboard.querySelectorAll('.key span.show .caps');
 
     keys.forEach(key => {
+        const spans = key.querySelectorAll('span > span');
+
         if (key.classList.contains('CapsLock')) {
 
             key.addEventListener('click', (e) => {
-                let target = e.currentTarget;
-                target.classList.toggle('active');
-                if (target.classList.contains('active')) {
-                    caseDownKeys.forEach(key => {
-                        key.classList.add('hidden');
-                    });
-                    capsKeys.forEach(key => {
-                        key.classList.remove('hidden');
-                    });
-
-                } else {
-                    caseDownKeys.forEach(key => {
-                        key.classList.remove('hidden');
-                    });
-                    capsKeys.forEach(key => {
-                        key.classList.add('hidden');
-                    });
-                }
+                eventCapsLock(e, caseDownKeys, capsKeys);
 
             });
         } else if (key.classList.contains('ShiftLeft') ||
-                   key.classList.contains('ShiftRight')) {
+            key.classList.contains('ShiftRight')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-                caseDownKeys.forEach(key => {
-                    key.classList.add('hidden');
-                });
-                caseUpKeys.forEach(key => {
-                    key.classList.remove('hidden');
-                });
+                eventShiftKeyDown(e, caseDownKeys, caseUpKeys)
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
-                caseDownKeys.forEach(key => {
-                    key.classList.remove('hidden');
-                });
-                caseUpKeys.forEach(key => {
-                    key.classList.add('hidden');
-                });
+                eventShiftKeyUp(e, caseDownKeys, caseUpKeys)
             });
         } else if (key.classList.contains('ControlLeft') ||
-                   key.classList.contains('ControlRight') ||
-                   key.classList.contains('AltLeft') ||
-                   key.classList.contains('AltRight') ||
-                   key.classList.contains('MetaLeft')) {
+            key.classList.contains('ControlRight') ||
+            key.classList.contains('AltLeft') ||
+            key.classList.contains('AltRight') ||
+            key.classList.contains('MetaLeft')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
+                makeActiveKey(e);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                makeNotActiveKey(e);
             });
         } else if (key.classList.contains('Backspace')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const cursorPosition = textarea.selectionStart;
-                const textBeforeCursor = textarea.value.slice(0, cursorPosition);
-                const lastElementPosition = textBeforeCursor.lastIndexOf(' ');
-                const newText = textBeforeCursor.slice(0, lastElementPosition) + textarea.value.slice(cursorPosition);
-                textarea.value = newText;
+                eventBackSpaceDown(e, textarea);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                makeNotActiveKey(e);
             });
         } else if (key.classList.contains('Delete')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const cursorPosition = textarea.selectionStart;
-                const textAfterCursor = textarea.value.slice(cursorPosition);
-                const nextElementPosition = textAfterCursor.indexOf(' ');
-
-                // Если следующий элемент не найден, удаляем текст после курсора
-                if (nextElementPosition === -1) {
-                    textarea.value = textarea.value.slice(0, cursorPosition);
-                } else {
-                    const newText = textarea.value.slice(0, cursorPosition) + textAfterCursor.slice(nextElementPosition + 1);
-                    textarea.value = newText;
-                }
-
-                // Устанавливаем курсор в правильное место
-                textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+                eventDeleteDown(e, textarea);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                makeNotActiveKey(e);
             });
         } else if (key.classList.contains('Enter')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const spans = key.querySelectorAll('span > span');
-                spans.forEach(span => {
-                    if (!span.classList.contains('hidden')) {
-                        textarea.value += '\n';
-                    }
-                });
+                eventEnterDown(e, spans);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                makeNotActiveKey(e);
             });
         } else if (key.classList.contains('Tab')) {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const spans = key.querySelectorAll('span > span');
-                spans.forEach(span => {
-                    if (!span.classList.contains('hidden')) {
-                        textarea.value += '  ';
-                    }
-                });
+                eventTabDown(e, spans);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                makeNotActiveKey(e);
             });
         } else {
             key.addEventListener('mousedown', (e) => {
-                let target = e.currentTarget;
-                target.classList.add('active');
-
-                const spans = key.querySelectorAll('span > span');
-                spans.forEach(span => {
-                    if (!span.classList.contains('hidden')) {
-                        textarea.value += span.textContent;
-                    }
-                });
+                eventKeyDown(e, spans);
             });
             key.addEventListener('mouseup', (e) => {
-                let target = e.currentTarget;
-                target.classList.remove('active');
+                makeNotActiveKey(e);
             });
         }
-
     });
-
 });
 
 
