@@ -48,7 +48,6 @@ function createKey(index) {
     innerSpan(langEng, 'eng', index);
 
     return key;
-
 }
 
 export default createKey;

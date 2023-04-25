@@ -144,7 +144,6 @@ function createKey(index) {
     innerSpan(langEng, 'eng', index);
 
     return key;
-
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createKey);
@@ -325,6 +324,9 @@ window.addEventListener('DOMContentLoaded', () => {
     container.append(textarea);
     container.append(keyboard);
 
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
     const keys = container.querySelectorAll('.key'),
           caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
           caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
@@ -423,6 +425,38 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 // Устанавливаем курсор в правильное место
                 textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else if (key.classList.contains('Enter')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const spans = key.querySelectorAll('span > span');
+                spans.forEach(span => {
+                    if (!span.classList.contains('hidden')) {
+                        textarea.value += '\n';
+                    }
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else if (key.classList.contains('Tab')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const spans = key.querySelectorAll('span > span');
+                spans.forEach(span => {
+                    if (!span.classList.contains('hidden')) {
+                        textarea.value += '  ';
+                    }
+                });
             });
             key.addEventListener('mouseup', (e) => {
                 let target = e.currentTarget;
