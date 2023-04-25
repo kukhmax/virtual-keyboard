@@ -100,7 +100,7 @@ __webpack_require__.r(__webpack_exports__);
 
 function innerSpan(spanKey, language, index) {
     const charsList = ['lowerEng', 'upperEng', 'lowerRus', 'upperRus'],
-          classes = ['caseDown', 'caseUp', 'caps', 'shiftCaps'];
+          classes = ['caseDown', 'caseUp', 'shiftCaps', 'caps'];
 
           if (_key_names__WEBPACK_IMPORTED_MODULE_0__["default"][index].code) {
             spanKey.parentNode.classList.add(_key_names__WEBPACK_IMPORTED_MODULE_0__["default"][index].code);
@@ -138,13 +138,12 @@ function createKey(index) {
     langRus.classList.add('hidden');
     key.append(langEng);
     langEng.classList.add('eng');
-    // langEng.classList.add('show');
+    langEng.classList.add('show');
 
     innerSpan(langRus, 'rus', index);
     innerSpan(langEng, 'eng', index);
 
     return key;
-
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (createKey);
@@ -323,28 +322,164 @@ window.addEventListener('DOMContentLoaded', () => {
     container.classList.add('container');
     document.body.append(container);
     container.append(textarea);
-    // textarea.focus();
-
     container.append(keyboard);
 
-    const keys = container.querySelectorAll('.key');
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+    const keys = container.querySelectorAll('.key'),
+          caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
+          caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
+          capsKeys = keyboard.querySelectorAll('.key span.show .caps');
 
     keys.forEach(key => {
-        key.addEventListener('click', (e) => {
-            let target = e.currentTarget;
-            // console.log(target.textContent)
-            target.classList.add('active');
-            setTimeout(function() {
-                target.classList.remove('active');
-              }, 300);
+        if (key.classList.contains('CapsLock')) {
 
-              const spans = key.querySelectorAll('span > span');
-              spans.forEach(span => {
-                  if (!span.classList.contains('hidden')) {
-                      textarea.value += span.textContent;
-                  }
-              });
-        });
+            key.addEventListener('click', (e) => {
+                let target = e.currentTarget;
+                target.classList.toggle('active');
+                if (target.classList.contains('active')) {
+                    caseDownKeys.forEach(key => {
+                        key.classList.add('hidden');
+                    });
+                    capsKeys.forEach(key => {
+                        key.classList.remove('hidden');
+                    });
+
+                } else {
+                    caseDownKeys.forEach(key => {
+                        key.classList.remove('hidden');
+                    });
+                    capsKeys.forEach(key => {
+                        key.classList.add('hidden');
+                    });
+                }
+
+            });
+        } else if (key.classList.contains('ShiftLeft') ||
+                   key.classList.contains('ShiftRight')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+                caseDownKeys.forEach(key => {
+                    key.classList.add('hidden');
+                });
+                caseUpKeys.forEach(key => {
+                    key.classList.remove('hidden');
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+                caseDownKeys.forEach(key => {
+                    key.classList.remove('hidden');
+                });
+                caseUpKeys.forEach(key => {
+                    key.classList.add('hidden');
+                });
+            });
+        } else if (key.classList.contains('ControlLeft') ||
+                   key.classList.contains('ControlRight') ||
+                   key.classList.contains('AltLeft') ||
+                   key.classList.contains('AltRight') ||
+                   key.classList.contains('MetaLeft')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else if (key.classList.contains('Backspace')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const cursorPosition = textarea.selectionStart;
+                const textBeforeCursor = textarea.value.slice(0, cursorPosition);
+                const lastElementPosition = textBeforeCursor.lastIndexOf(' ');
+                const newText = textBeforeCursor.slice(0, lastElementPosition) + textarea.value.slice(cursorPosition);
+                textarea.value = newText;
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else if (key.classList.contains('Delete')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const cursorPosition = textarea.selectionStart;
+                const textAfterCursor = textarea.value.slice(cursorPosition);
+                const nextElementPosition = textAfterCursor.indexOf(' ');
+
+                // Если следующий элемент не найден, удаляем текст после курсора
+                if (nextElementPosition === -1) {
+                    textarea.value = textarea.value.slice(0, cursorPosition);
+                } else {
+                    const newText = textarea.value.slice(0, cursorPosition) + textAfterCursor.slice(nextElementPosition + 1);
+                    textarea.value = newText;
+                }
+
+                // Устанавливаем курсор в правильное место
+                textarea.selectionStart = textarea.selectionEnd = cursorPosition;
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else if (key.classList.contains('Enter')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const spans = key.querySelectorAll('span > span');
+                spans.forEach(span => {
+                    if (!span.classList.contains('hidden')) {
+                        textarea.value += '\n';
+                    }
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else if (key.classList.contains('Tab')) {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const spans = key.querySelectorAll('span > span');
+                spans.forEach(span => {
+                    if (!span.classList.contains('hidden')) {
+                        textarea.value += '  ';
+                    }
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        } else {
+            key.addEventListener('mousedown', (e) => {
+                let target = e.currentTarget;
+                target.classList.add('active');
+
+                const spans = key.querySelectorAll('span > span');
+                spans.forEach(span => {
+                    if (!span.classList.contains('hidden')) {
+                        textarea.value += span.textContent;
+                    }
+                });
+            });
+            key.addEventListener('mouseup', (e) => {
+                let target = e.currentTarget;
+                target.classList.remove('active');
+            });
+        }
+
     });
 
 });
