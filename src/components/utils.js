@@ -1,17 +1,14 @@
 'use strict';
 
-function makeActiveKey(e) {
-    let target = e.currentTarget;
+function makeActiveKey(e, target) {
     target.classList.add('active');
 }
 
-function makeNotActiveKey(e) {
-    let target = e.currentTarget;
+function makeNotActiveKey(e, target) {
     target.classList.remove('active');
 }
 
-function eventCapsLock(e, caseDownKeys, capsKeys) {
-    let target = e.currentTarget;
+function eventCapsLock(e, caseDownKeys, capsKeys, target) {
     target.classList.toggle('active');
     if (target.classList.contains('active')) {
 
@@ -38,8 +35,8 @@ function eventCapsLock(e, caseDownKeys, capsKeys) {
     }
 }
 
-function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
-    makeActiveKey(e);
+function eventShiftKeyDown(e, caseDownKeys, caseUpKeys, target) {
+    makeActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.add('hidden');
     });
@@ -48,8 +45,8 @@ function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
     });
 }
 
-function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
-    makeNotActiveKey(e);
+function eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target) {
+    makeNotActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.remove('hidden');
     });

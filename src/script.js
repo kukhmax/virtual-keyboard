@@ -1,3 +1,5 @@
+'use strict';
+
 import createTextarea from './components/textarea';
 import createKeyboard from './components/keyboard';
 import {
@@ -14,6 +16,7 @@ import {
 } from './components/utils';
 
 window.addEventListener('DOMContentLoaded', () => {
+
     const container = document.createElement('div'),
         textarea = createTextarea(),
         keyboard = createKeyboard();
@@ -29,7 +32,29 @@ window.addEventListener('DOMContentLoaded', () => {
     const keys = container.querySelectorAll('.key'),
         caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
         caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
-        capsKeys = keyboard.querySelectorAll('.key span.show .caps');
+        capsKeys = keyboard.querySelectorAll('.key span.show .caps'),
+        shiftCapsKeys = keyboard.querySelectorAll('.key span.show .shiftCaps');
+
+    // physical keyboard
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code == 'CapsLock') {
+            let target = document.querySelector(`.${e.code}`);
+            eventCapsLock(e, caseDownKeys, capsKeys, target);
+        } else if (e.code == 'ShiftLeft' || e.code == 'ShiftRight') {
+            let target = document.querySelector(`.${e.code}`);
+            eventShiftKeyDown(e, caseDownKeys, caseUpKeys, target);
+        }
+      });
+
+      document.addEventListener('keyup', (e) => {
+        if (e.code == 'ShiftLeft' || e.code == 'ShiftRight') {
+            let target = document.querySelector(`.${e.code}`);
+            eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target);
+        }
+      });
+
+    // virtual keyboard
 
     keys.forEach(key => {
         const spans = key.querySelectorAll('span > span');
@@ -37,16 +62,19 @@ window.addEventListener('DOMContentLoaded', () => {
         if (key.classList.contains('CapsLock')) {
 
             key.addEventListener('click', (e) => {
-                eventCapsLock(e, caseDownKeys, capsKeys);
+                let target = e.currentTarget;
+                eventCapsLock(e, caseDownKeys, capsKeys, target);
 
             });
         } else if (key.classList.contains('ShiftLeft') ||
             key.classList.contains('ShiftRight')) {
             key.addEventListener('mousedown', (e) => {
-                eventShiftKeyDown(e, caseDownKeys, caseUpKeys)
+                let target = e.currentTarget;
+                eventShiftKeyDown(e, caseDownKeys, caseUpKeys, target);
             });
             key.addEventListener('mouseup', (e) => {
-                eventShiftKeyUp(e, caseDownKeys, caseUpKeys)
+                let target = e.currentTarget;
+                eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target);
             });
         } else if (key.classList.contains('ControlLeft') ||
             key.classList.contains('ControlRight') ||
@@ -96,6 +124,7 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
 });
 
 

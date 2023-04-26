@@ -267,18 +267,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 
 
-function makeActiveKey(e) {
-    let target = e.currentTarget;
+function makeActiveKey(e, target) {
     target.classList.add('active');
 }
 
-function makeNotActiveKey(e) {
-    let target = e.currentTarget;
+function makeNotActiveKey(e, target) {
     target.classList.remove('active');
 }
 
-function eventCapsLock(e, caseDownKeys, capsKeys) {
-    let target = e.currentTarget;
+function eventCapsLock(e, caseDownKeys, capsKeys, target) {
     target.classList.toggle('active');
     if (target.classList.contains('active')) {
 
@@ -305,8 +302,8 @@ function eventCapsLock(e, caseDownKeys, capsKeys) {
     }
 }
 
-function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
-    makeActiveKey(e);
+function eventShiftKeyDown(e, caseDownKeys, caseUpKeys, target) {
+    makeActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.add('hidden');
     });
@@ -315,8 +312,8 @@ function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
     });
 }
 
-function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
-    makeNotActiveKey(e);
+function eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target) {
+    makeNotActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.remove('hidden');
     });
@@ -458,7 +455,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 window.addEventListener('DOMContentLoaded', () => {
+
     const container = document.createElement('div'),
         textarea = (0,_components_textarea__WEBPACK_IMPORTED_MODULE_0__["default"])(),
         keyboard = (0,_components_keyboard__WEBPACK_IMPORTED_MODULE_1__["default"])();
@@ -474,7 +474,29 @@ window.addEventListener('DOMContentLoaded', () => {
     const keys = container.querySelectorAll('.key'),
         caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
         caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
-        capsKeys = keyboard.querySelectorAll('.key span.show .caps');
+        capsKeys = keyboard.querySelectorAll('.key span.show .caps'),
+        shiftCapsKeys = keyboard.querySelectorAll('.key span.show .shiftCaps');
+
+    // physical keyboard
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code == 'CapsLock') {
+            let target = document.querySelector(`.${e.code}`);
+            (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys, target);
+        } else if (e.code == 'ShiftLeft' || e.code == 'ShiftRight') {
+            let target = document.querySelector(`.${e.code}`);
+            (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyDown)(e, caseDownKeys, caseUpKeys, target);
+        }
+      });
+
+      document.addEventListener('keyup', (e) => {
+        if (e.code == 'ShiftLeft' || e.code == 'ShiftRight') {
+            let target = document.querySelector(`.${e.code}`);
+            (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyUp)(e, caseDownKeys, caseUpKeys, target);
+        }
+      });
+
+    // virtual keyboard
 
     keys.forEach(key => {
         const spans = key.querySelectorAll('span > span');
@@ -482,16 +504,19 @@ window.addEventListener('DOMContentLoaded', () => {
         if (key.classList.contains('CapsLock')) {
 
             key.addEventListener('click', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys, target);
 
             });
         } else if (key.classList.contains('ShiftLeft') ||
             key.classList.contains('ShiftRight')) {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyDown)(e, caseDownKeys, caseUpKeys)
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyDown)(e, caseDownKeys, caseUpKeys, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyUp)(e, caseDownKeys, caseUpKeys)
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyUp)(e, caseDownKeys, caseUpKeys, target);
             });
         } else if (key.classList.contains('ControlLeft') ||
             key.classList.contains('ControlRight') ||
@@ -541,6 +566,7 @@ window.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
 });
 
 
