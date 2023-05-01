@@ -1,17 +1,14 @@
 'use strict';
 
-function makeActiveKey(e) {
-    let target = e.currentTarget;
+function makeActiveKey(e, target) {
     target.classList.add('active');
 }
 
-function makeNotActiveKey(e) {
-    let target = e.currentTarget;
+function makeNotActiveKey(e, target) {
     target.classList.remove('active');
 }
 
-function eventCapsLock(e, caseDownKeys, capsKeys) {
-    let target = e.currentTarget;
+function eventCapsLock(e, caseDownKeys, capsKeys, target) {
     target.classList.toggle('active');
     if (target.classList.contains('active')) {
 
@@ -38,8 +35,61 @@ function eventCapsLock(e, caseDownKeys, capsKeys) {
     }
 }
 
-function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
-    makeActiveKey(e);
+function eventCapsLockShiftDown (e, capsKeys, shiftCapsKeys, target) {
+    makeActiveKey(e, target);
+
+    shiftCapsKeys.forEach(key => {
+        if (/[а-яёa-z]/.test(key.textContent)) {
+            key.classList.remove('hidden');
+        }
+
+    });
+    capsKeys.forEach(key => {
+        if (/[A-ZЁА-Я]/.test(key.textContent)) {
+            key.classList.add('hidden');
+        } else {
+            key.classList.remove('hidden');
+        }
+
+    });
+}
+
+function eventCapsLockShiftUp (e, capsKeys, shiftCapsKeys, target) {
+    makeNotActiveKey(e, target);
+
+    shiftCapsKeys.forEach(key => {
+        if (/[а-яёa-z]/.test(key.textContent)) {
+            key.classList.add('hidden');
+        } else {
+            key.classList.remove('hidden');
+        }
+
+    });
+    capsKeys.forEach(key => {
+        if (/[A-ZЁА-Я]/.test(key.textContent)) {
+            key.classList.remove('hidden');
+        } else {
+            key.classList.add('hidden');
+        }
+
+    });
+}
+
+function eventShiftKeyDown(e, caseDownKeys, caseUpKeys, keyCapsLock, capsKeys, target) {
+    makeActiveKey(e, target);
+    if (keyCapsLock.classList.contains('active')) {
+        // console.log('cccccccccc');
+        capsKeys.forEach(key => {
+            if (/[A-ZЁА-Я]/.test(key.textContent)) {
+                console.log('cccccccccc');
+                key.classList.add('hidden');
+            }
+
+        });
+        // caseDownKeys.forEach(key => {
+        //     if (/)
+        // })
+    }
     caseDownKeys.forEach(key => {
         key.classList.add('hidden');
     });
@@ -48,8 +98,8 @@ function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
     });
 }
 
-function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
-    makeNotActiveKey(e);
+function eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target) {
+    makeNotActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.remove('hidden');
     });
@@ -58,8 +108,8 @@ function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
     });
 }
 
-function eventBackSpaceDown(e, textarea) {
-    makeActiveKey(e);
+function eventBackSpaceDown(e, textarea, target) {
+    makeActiveKey(e, target);
 
     const cursorPosition = textarea.selectionStart;
     const textBeforeCursor = textarea.value.slice(0, cursorPosition);
@@ -68,8 +118,8 @@ function eventBackSpaceDown(e, textarea) {
     textarea.value = newText;
 }
 
-function eventDeleteDown(e, textarea) {
-    makeActiveKey(e);
+function eventDeleteDown(e, textarea, target) {
+    makeActiveKey(e, target);
 
     const cursorPosition = textarea.selectionStart;
     const textAfterCursor = textarea.value.slice(cursorPosition);
@@ -87,8 +137,8 @@ function eventDeleteDown(e, textarea) {
     textarea.selectionStart = textarea.selectionEnd = cursorPosition;
 }
 
-function eventEnterDown(e, spans) {
-    makeActiveKey(e);
+function eventEnterDown(e, spans, target) {
+    makeActiveKey(e, target);
 
     spans.forEach(span => {
         if (!span.classList.contains('hidden')) {
@@ -97,8 +147,8 @@ function eventEnterDown(e, spans) {
     });
 }
 
-function eventTabDown(e, spans) {
-    makeActiveKey(e);
+function eventTabDown(e, spans, target) {
+    makeActiveKey(e, target);
 
     spans.forEach(span => {
         if (!span.classList.contains('hidden')) {
@@ -107,8 +157,8 @@ function eventTabDown(e, spans) {
     });
 }
 
-function eventKeyDown(e, spans) {
-    makeActiveKey(e);
+function eventKeyDown(e, spans, target) {
+    makeActiveKey(e, target);
 
     spans.forEach(span => {
         if (!span.classList.contains('hidden')) {
@@ -118,6 +168,8 @@ function eventKeyDown(e, spans) {
 }
 
 export { eventCapsLock,
+         eventCapsLockShiftDown,
+         eventCapsLockShiftUp,
          eventShiftKeyDown,
          eventShiftKeyUp,
          makeActiveKey,

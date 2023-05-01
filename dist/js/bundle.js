@@ -256,6 +256,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "eventBackSpaceDown": () => (/* binding */ eventBackSpaceDown),
 /* harmony export */   "eventCapsLock": () => (/* binding */ eventCapsLock),
+/* harmony export */   "eventCapsLockShiftDown": () => (/* binding */ eventCapsLockShiftDown),
+/* harmony export */   "eventCapsLockShiftUp": () => (/* binding */ eventCapsLockShiftUp),
 /* harmony export */   "eventDeleteDown": () => (/* binding */ eventDeleteDown),
 /* harmony export */   "eventEnterDown": () => (/* binding */ eventEnterDown),
 /* harmony export */   "eventKeyDown": () => (/* binding */ eventKeyDown),
@@ -267,18 +269,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 
 
-function makeActiveKey(e) {
-    let target = e.currentTarget;
+function makeActiveKey(e, target) {
     target.classList.add('active');
 }
 
-function makeNotActiveKey(e) {
-    let target = e.currentTarget;
+function makeNotActiveKey(e, target) {
     target.classList.remove('active');
 }
 
-function eventCapsLock(e, caseDownKeys, capsKeys) {
-    let target = e.currentTarget;
+function eventCapsLock(e, caseDownKeys, capsKeys, target) {
     target.classList.toggle('active');
     if (target.classList.contains('active')) {
 
@@ -305,8 +304,46 @@ function eventCapsLock(e, caseDownKeys, capsKeys) {
     }
 }
 
-function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
-    makeActiveKey(e);
+function eventCapsLockShiftDown (e, capsKeys, shiftCapsKeys, target) {
+    makeActiveKey(e, target);
+
+    shiftCapsKeys.forEach(key => {
+        if (/[а-яёa-z]/.test(key.textContent)) {
+            key.classList.remove('hidden');
+        }
+
+    });
+    capsKeys.forEach(key => {
+        if (/[A-ZЁА-Я]/.test(key.textContent)) {
+            key.classList.add('hidden');
+        } else {
+            key.classList.remove('hidden');
+        }
+
+    });
+}
+
+function eventCapsLockShiftUp (e, capsKeys, shiftCapsKeys, target) {
+    makeNotActiveKey(e, target);
+
+    shiftCapsKeys.forEach(key => {
+        if (/[а-яёa-z]/.test(key.textContent)) {
+            key.classList.add('hidden');
+        }
+
+    });
+    capsKeys.forEach(key => {
+        if (/[A-ZЁА-Я]/.test(key.textContent)) {
+            key.classList.remove('hidden');
+        } else {
+            key.classList.add('hidden');
+        }
+
+    });
+}
+
+function eventShiftKeyDown(e, caseDownKeys, caseUpKeys, target) {
+    makeActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.add('hidden');
     });
@@ -315,8 +352,8 @@ function eventShiftKeyDown(e, caseDownKeys, caseUpKeys) {
     });
 }
 
-function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
-    makeNotActiveKey(e);
+function eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target) {
+    makeNotActiveKey(e, target);
     caseDownKeys.forEach(key => {
         key.classList.remove('hidden');
     });
@@ -325,8 +362,8 @@ function eventShiftKeyUp(e, caseDownKeys, caseUpKeys) {
     });
 }
 
-function eventBackSpaceDown(e, textarea) {
-    makeActiveKey(e);
+function eventBackSpaceDown(e, textarea, target) {
+    makeActiveKey(e, target);
 
     const cursorPosition = textarea.selectionStart;
     const textBeforeCursor = textarea.value.slice(0, cursorPosition);
@@ -335,8 +372,8 @@ function eventBackSpaceDown(e, textarea) {
     textarea.value = newText;
 }
 
-function eventDeleteDown(e, textarea) {
-    makeActiveKey(e);
+function eventDeleteDown(e, textarea, target) {
+    makeActiveKey(e, target);
 
     const cursorPosition = textarea.selectionStart;
     const textAfterCursor = textarea.value.slice(cursorPosition);
@@ -354,8 +391,8 @@ function eventDeleteDown(e, textarea) {
     textarea.selectionStart = textarea.selectionEnd = cursorPosition;
 }
 
-function eventEnterDown(e, spans) {
-    makeActiveKey(e);
+function eventEnterDown(e, spans, target) {
+    makeActiveKey(e, target);
 
     spans.forEach(span => {
         if (!span.classList.contains('hidden')) {
@@ -364,8 +401,8 @@ function eventEnterDown(e, spans) {
     });
 }
 
-function eventTabDown(e, spans) {
-    makeActiveKey(e);
+function eventTabDown(e, spans, target) {
+    makeActiveKey(e, target);
 
     spans.forEach(span => {
         if (!span.classList.contains('hidden')) {
@@ -374,8 +411,8 @@ function eventTabDown(e, spans) {
     });
 }
 
-function eventKeyDown(e, spans) {
-    makeActiveKey(e);
+function eventKeyDown(e, spans, target) {
+    makeActiveKey(e, target);
 
     spans.forEach(span => {
         if (!span.classList.contains('hidden')) {
@@ -458,7 +495,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 window.addEventListener('DOMContentLoaded', () => {
+
     const container = document.createElement('div'),
         textarea = (0,_components_textarea__WEBPACK_IMPORTED_MODULE_0__["default"])(),
         keyboard = (0,_components_keyboard__WEBPACK_IMPORTED_MODULE_1__["default"])();
@@ -472,9 +512,32 @@ window.addEventListener('DOMContentLoaded', () => {
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
 
     const keys = container.querySelectorAll('.key'),
-        caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
-        caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
-        capsKeys = keyboard.querySelectorAll('.key span.show .caps');
+          keyCapsLock = document.querySelector('.CapsLock'),
+          caseDownKeys = keyboard.querySelectorAll('.key span.show .caseDown'),
+          caseUpKeys = keyboard.querySelectorAll('.key span.show .caseUp'),
+          capsKeys = keyboard.querySelectorAll('.key span.show .caps'),
+          shiftCapsKeys = keyboard.querySelectorAll('.key span.show .shiftCaps');
+
+    // physical keyboard
+
+    document.addEventListener('keydown', (e) => {
+        if (e.code == 'CapsLock') {
+            let target = document.querySelector(`.${e.code}`);
+            (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys, target);
+        } else if (e.code == 'ShiftLeft' || e.code == 'ShiftRight') {
+            let target = document.querySelector(`.${e.code}`);
+            (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyDown)(e, caseDownKeys, caseUpKeys, target);
+        }
+      });
+
+      document.addEventListener('keyup', (e) => {
+        if (e.code == 'ShiftLeft' || e.code == 'ShiftRight') {
+            let target = document.querySelector(`.${e.code}`);
+            (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyUp)(e, caseDownKeys, caseUpKeys, target);
+        }
+      });
+
+    // virtual keyboard
 
     keys.forEach(key => {
         const spans = key.querySelectorAll('span > span');
@@ -482,65 +545,114 @@ window.addEventListener('DOMContentLoaded', () => {
         if (key.classList.contains('CapsLock')) {
 
             key.addEventListener('click', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLock)(e, caseDownKeys, capsKeys, target);
 
             });
-        } else if (key.classList.contains('ShiftLeft') ||
-            key.classList.contains('ShiftRight')) {
-            key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyDown)(e, caseDownKeys, caseUpKeys)
-            });
-            key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventShiftKeyUp)(e, caseDownKeys, caseUpKeys)
-            });
+
+
+        } else if (key.classList.contains('ShiftLeft') ) {
+
+                key.addEventListener('mousedown', (e) => {
+                    console.log('ljlllljl')
+                    let target = e.currentTarget;
+                    (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLockShiftDown) (e, capsKeys, shiftCapsKeys, target);
+                });
+                key.addEventListener('mouseup', (e) => {
+                    let target = e.currentTarget;
+                    (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLockShiftUp) (e, capsKeys, shiftCapsKeys, target);
+                });
+
+        // } else if (key.classList.contains('ShiftLeft') ||
+        // key.classList.contains('ShiftRight')) {
+        //     console.log()
+        // key.addEventListener('mousedown', (e) => {
+        //     let target = e.currentTarget;
+        //     eventShiftKeyDown(e, caseDownKeys, caseUpKeys, target);
+        // });
+        // key.addEventListener('mouseup', (e) => {
+        //     let target = e.currentTarget;
+        //     eventShiftKeyUp(e, caseDownKeys, caseUpKeys, target);
+        // });
+
         } else if (key.classList.contains('ControlLeft') ||
             key.classList.contains('ControlRight') ||
             key.classList.contains('AltLeft') ||
             key.classList.contains('AltRight') ||
             key.classList.contains('MetaLeft')) {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeActiveKey)(e, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e, target);
             });
         } else if (key.classList.contains('Backspace')) {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventBackSpaceDown)(e, textarea);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventBackSpaceDown)(e, textarea, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e, target);
             });
         } else if (key.classList.contains('Delete')) {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventDeleteDown)(e, textarea);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventDeleteDown)(e, textarea, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e, target);
             });
         } else if (key.classList.contains('Enter')) {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventEnterDown)(e, spans);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventEnterDown)(e, spans, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e, target);
             });
         } else if (key.classList.contains('Tab')) {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventTabDown)(e, spans);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventTabDown)(e, spans, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e, target);
             });
         } else {
             key.addEventListener('mousedown', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventKeyDown)(e, spans);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventKeyDown)(e, spans, target);
             });
             key.addEventListener('mouseup', (e) => {
-                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e);
+                let target = e.currentTarget;
+                (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.makeNotActiveKey)(e, target);
             });
         }
+
+        if (key.classList.contains('ShiftLeft') ||
+            key.classList.contains('ShiftRight')) {
+
+            if (keyCapsLock.classList.contains('active')) {
+                key.addEventListener('mousedown', (e) => {
+                    let target = e.currentTarget;
+
+                    (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLockShiftDown) (e, capsKeys, shiftCapsKeys, target);
+                });
+                key.addEventListener('mouseup', (e) => {
+                    let target = e.currentTarget;
+                    (0,_components_utils__WEBPACK_IMPORTED_MODULE_2__.eventCapsLockShiftUp) (e, capsKeys, shiftCapsKeys, target);
+                });
+            }
+            }
+
     });
+
 });
 
 
